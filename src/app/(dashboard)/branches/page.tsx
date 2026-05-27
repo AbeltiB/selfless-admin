@@ -10,6 +10,7 @@ import { PageSpinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { formatDate } from '@/lib/utils';
 import type { Branch } from 'selfless-sdk';
+import { BranchStatus } from 'selfless-sdk';
 import { Building2, Plus, Edit2, ToggleLeft, ToggleRight } from 'lucide-react';
 
 interface BranchForm {
@@ -62,7 +63,8 @@ export default function BranchesPage() {
   };
 
   const handleToggle = (branch: Branch) => {
-    updateBranch.mutate({ id: branch.id, isActive: !branch.isActive });
+    const newStatus = branch.status === BranchStatus.ACTIVE ? BranchStatus.INACTIVE : BranchStatus.ACTIVE;
+    updateBranch.mutate({ id: branch.id, status: newStatus });
   };
 
   if (isLoading) return <PageSpinner />;
@@ -130,8 +132,8 @@ export default function BranchesPage() {
                   </td>
                   <td className="px-6 py-4 text-slate-500">{branch.timezone}</td>
                   <td className="px-6 py-4">
-                    <Badge variant={branch.isActive ? 'success' : 'muted'}>
-                      {branch.isActive ? 'Active' : 'Inactive'}
+                    <Badge variant={branch.status === BranchStatus.ACTIVE ? 'success' : 'muted'}>
+                      {branch.status}
                     </Badge>
                   </td>
                   <td className="px-6 py-4 text-slate-500">{formatDate(branch.createdAt)}</td>
@@ -144,9 +146,9 @@ export default function BranchesPage() {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleToggle(branch)}
-                        title={branch.isActive ? 'Deactivate' : 'Activate'}
+                        title={branch.status === BranchStatus.ACTIVE ? 'Deactivate' : 'Activate'}
                       >
-                        {branch.isActive ? (
+                        {branch.status === BranchStatus.ACTIVE ? (
                           <ToggleRight className="w-4 h-4 text-green-600" />
                         ) : (
                           <ToggleLeft className="w-4 h-4 text-slate-400" />

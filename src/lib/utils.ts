@@ -8,16 +8,20 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const TICKET_STATUS_COLORS: Record<TicketStatus, string> = {
-  [TicketStatus.PENDING]: 'bg-gray-100 text-gray-700',
+  [TicketStatus.CREATED]: 'bg-gray-100 text-gray-700',
   [TicketStatus.WAITING]: 'bg-blue-100 text-blue-700',
   [TicketStatus.CALLED]: 'bg-amber-100 text-amber-700',
-  [TicketStatus.SERVING]: 'bg-green-100 text-green-700',
+  [TicketStatus.IN_SERVICE]: 'bg-green-100 text-green-700',
   [TicketStatus.ON_HOLD]: 'bg-orange-100 text-orange-700',
   [TicketStatus.TRANSFERRED]: 'bg-purple-100 text-purple-700',
+  [TicketStatus.AWAITING_PAYMENT]: 'bg-yellow-100 text-yellow-700',
+  [TicketStatus.AWAITING_DOCUMENT]: 'bg-cyan-100 text-cyan-700',
   [TicketStatus.COMPLETED]: 'bg-emerald-100 text-emerald-700',
+  [TicketStatus.REJECTED]: 'bg-rose-100 text-rose-700',
   [TicketStatus.NO_SHOW]: 'bg-red-100 text-red-700',
   [TicketStatus.CANCELLED]: 'bg-slate-100 text-slate-500',
   [TicketStatus.EXPIRED]: 'bg-slate-100 text-slate-400',
+  [TicketStatus.ABANDONED]: 'bg-slate-100 text-slate-300',
 };
 
 export const QUEUE_STATUS_COLORS: Record<QueueStatus, string> = {
@@ -27,11 +31,12 @@ export const QUEUE_STATUS_COLORS: Record<QueueStatus, string> = {
 };
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  [UserRole.ADMIN]: 'Admin',
-  [UserRole.SUPERVISOR]: 'Supervisor',
+  [UserRole.SUPER_ADMIN]: 'Super Admin',
+  [UserRole.ORG_ADMIN]: 'Org Admin',
   [UserRole.BRANCH_MANAGER]: 'Branch Manager',
-  [UserRole.OPERATOR]: 'Operator',
-  [UserRole.STAFF]: 'Staff',
+  [UserRole.SUPERVISOR]: 'Supervisor',
+  [UserRole.OFFICER]: 'Officer',
+  [UserRole.CUSTOMER]: 'Customer',
 };
 
 export { TICKET_STATUS_LABELS };

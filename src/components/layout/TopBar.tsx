@@ -3,20 +3,24 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { Bell } from 'lucide-react';
-import type { JwtPayload } from 'selfless-sdk';
+import type { JwtStaffPayload } from 'selfless-sdk';
 import { ROLE_LABELS } from '@/lib/utils';
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
   '/queues': 'Queue Management',
-  '/branches': 'Branch Management',
+  '/appointments': 'Appointments',
+  '/counters': 'Counters',
+  '/workflows': 'Workflows',
   '/services': 'Service Management',
+  '/branches': 'Branch Management',
+  '/organizations': 'Organizations',
   '/users': 'User Management',
   '/analytics': 'Analytics',
 };
 
 interface TopBarProps {
-  user?: JwtPayload | null;
+  user?: JwtStaffPayload | null;
 }
 
 export function TopBar({ user }: TopBarProps) {
@@ -51,10 +55,10 @@ export function TopBar({ user }: TopBarProps) {
       {/* User info */}
       <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
         <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-          {user?.name?.charAt(0)?.toUpperCase() ?? 'U'}
+          {user?.email?.charAt(0)?.toUpperCase() ?? 'U'}
         </div>
         <div className="hidden sm:block">
-          <p className="text-sm font-medium text-slate-800 leading-none">{user?.name ?? 'User'}</p>
+          <p className="text-sm font-medium text-slate-800 leading-none">{user?.email ?? 'User'}</p>
           <p className="text-xs text-slate-500 mt-0.5">
             {user?.role ? ROLE_LABELS[user.role] : ''}
           </p>

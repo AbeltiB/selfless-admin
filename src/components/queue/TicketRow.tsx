@@ -1,12 +1,12 @@
 'use client';
-import type { QueueTicket } from 'selfless-sdk';
+import type { Ticket } from 'selfless-sdk';
 import { TicketStatus } from 'selfless-sdk';
 import { TicketBadge } from './TicketBadge';
 import { formatWait, formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
 interface TicketRowProps {
-  ticket: QueueTicket;
+  ticket: Ticket;
   onStatusChange?: (ticketId: string, status: TicketStatus) => void;
 }
 
@@ -17,23 +17,23 @@ export function TicketRow({ ticket, onStatusChange }: TicketRowProps) {
     actions.push({ label: 'Call', status: TicketStatus.CALLED, variant: 'primary' });
     actions.push({ label: 'Cancel', status: TicketStatus.CANCELLED, variant: 'ghost' });
   } else if (ticket.status === TicketStatus.CALLED) {
-    actions.push({ label: 'Serve', status: TicketStatus.SERVING, variant: 'success' });
+    actions.push({ label: 'Serve', status: TicketStatus.IN_SERVICE, variant: 'success' });
     actions.push({ label: 'No Show', status: TicketStatus.NO_SHOW, variant: 'danger' });
-  } else if (ticket.status === TicketStatus.SERVING) {
+  } else if (ticket.status === TicketStatus.IN_SERVICE) {
     actions.push({ label: 'Complete', status: TicketStatus.COMPLETED, variant: 'success' });
     actions.push({ label: 'Hold', status: TicketStatus.ON_HOLD, variant: 'secondary' });
   } else if (ticket.status === TicketStatus.ON_HOLD) {
-    actions.push({ label: 'Resume', status: TicketStatus.SERVING, variant: 'primary' });
+    actions.push({ label: 'Resume', status: TicketStatus.IN_SERVICE, variant: 'primary' });
     actions.push({ label: 'Cancel', status: TicketStatus.CANCELLED, variant: 'ghost' });
   }
 
   return (
     <tr className="hover:bg-slate-50 transition-colors">
       <td className="px-4 py-3 text-sm font-mono font-semibold text-slate-800">
-        {ticket.ticketNumber}
+        {ticket.queueNumber}
       </td>
       <td className="px-4 py-3 text-sm text-slate-700">
-        {ticket.customer?.name ?? 'Walk-in'}
+        Walk-in
       </td>
       <td className="px-4 py-3">
         <TicketBadge status={ticket.status} />

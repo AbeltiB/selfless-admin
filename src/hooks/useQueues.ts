@@ -1,7 +1,7 @@
 'use client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import type { Queue, QueueTicket } from 'selfless-sdk';
+import type { Queue, Ticket } from 'selfless-sdk';
 import toast from 'react-hot-toast';
 
 export function useQueues(branchId?: string) {
@@ -17,7 +17,7 @@ export function useQueues(branchId?: string) {
 }
 
 export function useQueueTickets(queueId?: string) {
-  return useQuery<QueueTicket[]>({
+  return useQuery<Ticket[]>({
     queryKey: ['tickets', queueId],
     queryFn: async () => {
       const res = await api.get(`/queues/${queueId}/tickets`);

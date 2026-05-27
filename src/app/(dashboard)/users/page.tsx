@@ -29,15 +29,18 @@ interface UserForm {
 const defaultForm: UserForm = {
   name: '',
   email: '',
-  role: UserRole.OPERATOR,
+  role: UserRole.OFFICER,
   branchId: '',
   password: '',
 };
 
-const ROLE_OPTIONS = Object.values(UserRole).map((r) => ({
-  value: r,
-  label: ROLE_LABELS[r],
-}));
+// Staff-only roles for the admin UI (exclude CUSTOMER)
+const STAFF_ROLE_OPTIONS = [
+  UserRole.ORG_ADMIN,
+  UserRole.BRANCH_MANAGER,
+  UserRole.SUPERVISOR,
+  UserRole.OFFICER,
+].map((r) => ({ value: r, label: ROLE_LABELS[r] }));
 
 export default function UsersPage() {
   const qc = useQueryClient();
@@ -47,8 +50,10 @@ export default function UsersPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [form, setForm] = useState<UserForm>(defaultForm);
 
-  const isAdmin =
-    currentUser?.role === UserRole.ADMIN || currentUser?.role === UserRole.SUPERVISOR;
+  const canManageUsers =
+    currentUser?.role === UserRole.SUPER_ADMIN ||
+    currentUser?.role === UserRole.ORG_ADMIN ||
+    currentUser?.role === UserRole.BRANCH_MANAGER;
 
   const { data: users = [], isLoading } = useQuery<User[]>({
     queryKey: ['users'],
@@ -56,7 +61,7 @@ export default function UsersPage() {
       const res = await api.get('/users');
       return res.data.data ?? res.data;
     },
-    enabled: isAdmin,
+    enabled: canManageUsers,
   });
 
   const createUser = useMutation({
@@ -89,8 +94,8 @@ export default function UsersPage() {
   const openEdit = (user: User) => {
     setEditingUser(user);
     setForm({
-      name: user.name,
-      email: user.email,
+      name: user.name ?? '',
+      email: user.email ?? '',
       role: user.role,
       branchId: user.branchId ?? '',
       password: '',
@@ -113,18 +118,18 @@ export default function UsersPage() {
 
   const getRoleBadgeVariant = (role: UserRole) => {
     switch (role) {
-      case UserRole.ADMIN:
+      case UserRole.SUPER_ADMIN:
+      case UserRole.ORG_ADMIN:
         return 'danger' as const;
+      case UserRole.BRANCH_MANAGER:
       case UserRole.SUPERVISOR:
         return 'warning' as const;
-      case UserRole.BRANCH_MANAGER:
-        return 'info' as const;
       default:
         return 'default' as const;
     }
   };
 
-  if (!isAdmin) {
+  if (!canManageUsers) {
     return (
       <EmptyState
         icon={ShieldAlert}
@@ -189,15 +194,16 @@ export default function UsersPage() {
             <tbody className="divide-y divide-slate-100">
               {users.map((user) => {
                 const branch = branches.find((b) => b.id === user.branchId);
+                const displayName = user.name ?? user.email ?? 'Unknown';
                 return (
                   <tr key={user.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold text-sm shrink-0">
-                          {user.name.charAt(0).toUpperCase()}
+                          {displayName.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-medium text-slate-800">{user.name}</p>
+                          <p className="font-medium text-slate-800">{displayName}</p>
                           <p className="text-xs text-slate-500">{user.email}</p>
                         </div>
                       </div>
@@ -273,7 +279,7 @@ export default function UsersPage() {
               label="Role"
               value={form.role}
               onChange={(e) => setForm((f) => ({ ...f, role: e.target.value as UserRole }))}
-              options={ROLE_OPTIONS}
+              options={STAFF_ROLE_OPTIONS}
             />
             <Select
               label="Branch"

@@ -15,10 +15,11 @@ interface QueueCardProps {
 
 export function QueueCard({ queue, onCallNext, onSelect, selected }: QueueCardProps) {
   const realtimeStat = useQueueStore((s) => s.stats[queue.id]);
+  const q = queue as any;
 
-  const waitingCount = realtimeStat?.waitingCount ?? queue.waitingCount ?? 0;
-  const servingCount = realtimeStat?.servingCount ?? queue.servingCount ?? 0;
-  const avgWait = realtimeStat?.avgWaitSeconds ?? queue.avgWaitSeconds;
+  const waitingCount = realtimeStat?.waitingCount ?? q.waitingCount ?? 0;
+  const servingCount = realtimeStat?.servingCount ?? q.servingCount ?? 0;
+  const avgWait = realtimeStat?.avgWaitSeconds ?? q.avgWaitSeconds;
   const status = (realtimeStat?.status as QueueStatus) ?? queue.status;
 
   return (
@@ -32,7 +33,7 @@ export function QueueCard({ queue, onCallNext, onSelect, selected }: QueueCardPr
       <div className="flex items-start justify-between mb-3">
         <div>
           <h3 className="font-semibold text-slate-800 text-sm">
-            {queue.service?.name ?? 'Queue'}
+            {q.service?.name ?? 'Queue'}
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">{queue.prefix} series</p>
         </div>

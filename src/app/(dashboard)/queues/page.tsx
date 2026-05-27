@@ -35,7 +35,7 @@ export default function QueuesPage() {
     updateStatusMutation.mutate({ ticketId, status });
   };
 
-  const servingTicket = tickets.find((t) => t.status === TicketStatus.SERVING);
+  const servingTicket = tickets.find((t) => t.status === TicketStatus.IN_SERVICE);
   const calledTicket = tickets.find((t) => t.status === TicketStatus.CALLED);
   const waitingCount = tickets.filter((t) => t.status === TicketStatus.WAITING).length;
 
@@ -92,7 +92,7 @@ export default function QueuesPage() {
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="font-semibold text-slate-800 text-lg">
-                  {selectedQueue.service?.name ?? 'Queue'}
+                  {(selectedQueue as any).service?.name ?? 'Queue'}
                 </h3>
                 <p className="text-sm text-slate-500 mt-0.5">{selectedQueue.prefix} series</p>
               </div>
@@ -130,10 +130,10 @@ export default function QueuesPage() {
                   {servingTicket ? 'Currently Serving' : 'Called'}
                 </p>
                 <p className="text-2xl font-bold text-green-800 font-mono">
-                  {(servingTicket ?? calledTicket)?.ticketNumber}
+                  {(servingTicket ?? calledTicket)?.queueNumber}
                 </p>
                 <p className="text-xs text-green-600 mt-0.5">
-                  {(servingTicket ?? calledTicket)?.customer?.name ?? 'Walk-in customer'}
+                  {'Walk-in customer'}
                 </p>
               </div>
             )}
@@ -164,7 +164,7 @@ export default function QueuesPage() {
               <div className="flex gap-2">
                 <Badge variant="info">{waitingCount} waiting</Badge>
                 <Badge variant="success">
-                  {tickets.filter((t) => t.status === TicketStatus.SERVING).length} serving
+                  {tickets.filter((t) => t.status === TicketStatus.IN_SERVICE).length} serving
                 </Badge>
               </div>
             </CardHeader>

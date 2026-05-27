@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { JwtPayload } from 'selfless-sdk';
+import type { JwtStaffPayload } from 'selfless-sdk';
 
 interface AuthState {
-  user: JwtPayload | null;
+  user: JwtStaffPayload | null;
   token: string | null;
-  setAuth: (token: string, user: JwtPayload) => void;
+  setAuth: (token: string, user: JwtStaffPayload) => void;
   clearAuth: () => void;
   isAuthenticated: () => boolean;
 }

@@ -16,10 +16,10 @@ import {
   PlayCircle,
   CheckCircle2,
   Clock,
-  Ticket,
+  Ticket as TicketIcon,
   Plus,
 } from 'lucide-react';
-import type { Queue, QueueTicket } from 'selfless-sdk';
+import type { Queue, Ticket } from 'selfless-sdk';
 import { formatWait, formatDate } from '@/lib/utils';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
@@ -53,7 +53,7 @@ export default function DashboardPage() {
   });
 
   // Fetch recent tickets
-  const { data: recentTickets = [] } = useQuery<QueueTicket[]>({
+  const { data: recentTickets = [] } = useQuery<Ticket[]>({
     queryKey: ['recent-tickets'],
     queryFn: async () => {
       const res = await api.get('/tickets', { params: { limit: 10, sort: 'createdAt:desc' } });
@@ -163,7 +163,7 @@ export default function DashboardPage() {
         <PageSpinner />
       ) : queues.length === 0 ? (
         <EmptyState
-          icon={Ticket}
+          icon={TicketIcon}
           title="No active queues"
           description="Open a new queue to start serving customers"
           action={
@@ -226,10 +226,10 @@ export default function DashboardPage() {
                 recentTickets.map((ticket) => (
                   <tr key={ticket.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-3 font-mono font-semibold text-slate-800">
-                      {ticket.ticketNumber}
+                      {ticket.queueNumber}
                     </td>
                     <td className="px-6 py-3 text-slate-700">
-                      {ticket.customer?.name ?? 'Walk-in'}
+                      {'Walk-in'}
                     </td>
                     <td className="px-6 py-3">
                       <TicketBadge status={ticket.status} />

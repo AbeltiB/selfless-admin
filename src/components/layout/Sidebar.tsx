@@ -5,9 +5,13 @@ import {
   LayoutDashboard,
   Ticket,
   Building2,
+  Building,
   ListTodo,
   Users,
   BarChart2,
+  GitBranch,
+  Monitor,
+  CalendarClock,
   LogOut,
 } from 'lucide-react';
 import { cn, ROLE_LABELS } from '@/lib/utils';
@@ -19,19 +23,19 @@ interface NavItem {
   href: string;
   icon: React.ElementType;
   roles?: UserRole[];
+  section?: string;
 }
 
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { label: 'Queues', href: '/queues', icon: Ticket },
-  { label: 'Branches', href: '/branches', icon: Building2 },
+  { label: 'Appointments', href: '/appointments', icon: CalendarClock },
+  { label: 'Counters', href: '/counters', icon: Monitor },
+  { label: 'Workflows', href: '/workflows', icon: GitBranch, roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
   { label: 'Services', href: '/services', icon: ListTodo },
-  {
-    label: 'Users',
-    href: '/users',
-    icon: Users,
-    roles: [UserRole.ADMIN, UserRole.SUPERVISOR],
-  },
+  { label: 'Branches', href: '/branches', icon: Building2, roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
+  { label: 'Organizations', href: '/organizations', icon: Building, roles: [UserRole.SUPER_ADMIN] },
+  { label: 'Users', href: '/users', icon: Users, roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
   { label: 'Analytics', href: '/analytics', icon: BarChart2 },
 ];
 
@@ -92,10 +96,10 @@ export function Sidebar({ userRole }: SidebarProps) {
       <div className="px-3 py-4 border-t border-slate-700">
         <div className="flex items-center gap-3 px-3 py-2 mb-2">
           <div className="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-sm font-semibold">
-            {user?.name?.charAt(0)?.toUpperCase() ?? 'U'}
+            {user?.email?.charAt(0)?.toUpperCase() ?? 'U'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{user?.name ?? 'User'}</p>
+            <p className="text-sm font-medium text-white truncate">{user?.email ?? 'User'}</p>
             <p className="text-xs text-slate-400 truncate">
               {user?.role ? ROLE_LABELS[user.role] : ''}
             </p>
