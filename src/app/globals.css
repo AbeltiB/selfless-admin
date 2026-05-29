@@ -1,34 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --color-primary: #2563eb;
-  --color-sidebar: #1e293b;
-  --sidebar-width: 260px;
+/* ── Civic Trust design tokens ─────────────────────────────────────────── */
+@theme {
+  /* Primary navy/blue ramp */
+  --color-ct-950: #0A1628;
+  --color-ct-900: #1A2B4A;
+  --color-ct-800: #1E3A5F;
+  --color-ct-700: #1D4ED8;
+  --color-ct-600: #2563EB;
+  --color-ct-500: #3B82F6;
+  --color-ct-400: #60A5FA;
+  --color-ct-300: #93C5FD;
+  --color-ct-200: #BFDBFE;
+  --color-ct-100: #DBEAFE;
+  --color-ct-50:  #EFF6FF;
+
+  /* Status */
+  --color-status-success:      #10B981;
+  --color-status-success-bg:   #D1FAE5;
+  --color-status-success-text: #065F46;
+  --color-status-warning:      #F59E0B;
+  --color-status-warning-bg:   #FEF3C7;
+  --color-status-warning-text: #92400E;
+  --color-status-danger:       #EF4444;
+  --color-status-danger-bg:    #FEE2E2;
+  --color-status-danger-text:  #991B1B;
+
+  /* Fonts */
+  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), 'DM Mono', 'Fira Code', monospace;
 }
 
-* {
+/* ── Semantic aliases (for raw CSS use) ────────────────────────────────── */
+:root {
+  --color-sidebar-bg:    #1A2B4A;
+  --color-sidebar-width: 260px;
+}
+
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
 body {
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #BFDBFE; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #93C5FD; }

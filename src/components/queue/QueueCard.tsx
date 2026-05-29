@@ -27,7 +27,7 @@ export function QueueCard({ queue, onCallNext, onSelect, selected }: QueueCardPr
       onClick={() => onSelect?.(queue)}
       className={cn(
         'bg-white rounded-xl border-2 p-5 cursor-pointer transition-all hover:shadow-md',
-        selected ? 'border-blue-500 shadow-md' : 'border-slate-200',
+        selected ? 'border-ct-600 shadow-md' : 'border-slate-200',
       )}
     >
       <div className="flex items-start justify-between mb-3">

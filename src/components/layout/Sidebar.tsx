@@ -23,20 +23,19 @@ interface NavItem {
   href: string;
   icon: React.ElementType;
   roles?: UserRole[];
-  section?: string;
 }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Queues', href: '/queues', icon: Ticket },
-  { label: 'Appointments', href: '/appointments', icon: CalendarClock },
-  { label: 'Counters', href: '/counters', icon: Monitor },
-  { label: 'Workflows', href: '/workflows', icon: GitBranch, roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
-  { label: 'Services', href: '/services', icon: ListTodo },
-  { label: 'Branches', href: '/branches', icon: Building2, roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
-  { label: 'Organizations', href: '/organizations', icon: Building, roles: [UserRole.SUPER_ADMIN] },
-  { label: 'Users', href: '/users', icon: Users, roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
-  { label: 'Analytics', href: '/analytics', icon: BarChart2 },
+  { label: 'Dashboard',     href: '/dashboard',     icon: LayoutDashboard },
+  { label: 'Queues',        href: '/queues',         icon: Ticket },
+  { label: 'Appointments',  href: '/appointments',   icon: CalendarClock },
+  { label: 'Counters',      href: '/counters',       icon: Monitor },
+  { label: 'Workflows',     href: '/workflows',      icon: GitBranch,  roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
+  { label: 'Services',      href: '/services',       icon: ListTodo },
+  { label: 'Branches',      href: '/branches',       icon: Building2,  roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
+  { label: 'Organizations', href: '/organizations',  icon: Building,   roles: [UserRole.SUPER_ADMIN] },
+  { label: 'Users',         href: '/users',          icon: Users,      roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
+  { label: 'Analytics',     href: '/analytics',      icon: BarChart2 },
 ];
 
 interface SidebarProps {
@@ -53,18 +52,18 @@ export function Sidebar({ userRole }: SidebarProps) {
 
   return (
     <aside
-      className="flex flex-col h-full bg-slate-800 text-white"
-      style={{ width: '260px', minWidth: '260px' }}
+      className="flex flex-col h-full text-white"
+      style={{ width: '260px', minWidth: '260px', backgroundColor: '#1A2B4A' }}
     >
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-slate-700">
+      <div className="px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-lg">
+          <div className="w-9 h-9 bg-ct-600 rounded-lg flex items-center justify-center font-bold text-lg text-white">
             S
           </div>
           <div>
-            <h1 className="font-bold text-white text-lg leading-none">SelfLess</h1>
-            <p className="text-slate-400 text-xs mt-0.5">Admin Portal</p>
+            <h1 className="font-semibold text-white text-base leading-none">SelfLess</h1>
+            <p className="text-xs mt-0.5" style={{ color: '#93C5FD', opacity: 0.7 }}>Admin Portal</p>
           </div>
         </div>
       </div>
@@ -79,11 +78,14 @@ export function Sidebar({ userRole }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-300 hover:bg-slate-700 hover:text-white',
+                  ? 'bg-ct-600 text-white'
+                  : 'text-ct-300 opacity-75 hover:opacity-100 hover:text-white',
               )}
+              style={!isActive ? { ':hover': { backgroundColor: 'rgba(255,255,255,0.06)' } } as React.CSSProperties : undefined}
+              onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.06)'; }}
+              onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = ''; }}
             >
               <Icon className="w-5 h-5 shrink-0" />
               {item.label}
@@ -93,21 +95,26 @@ export function Sidebar({ userRole }: SidebarProps) {
       </nav>
 
       {/* User info + logout */}
-      <div className="px-3 py-4 border-t border-slate-700">
-        <div className="flex items-center gap-3 px-3 py-2 mb-2">
-          <div className="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-sm font-semibold">
+      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="flex items-center gap-3 px-3 py-2 mb-1">
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
+            style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
+          >
             {user?.email?.charAt(0)?.toUpperCase() ?? 'U'}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">{user?.email ?? 'User'}</p>
-            <p className="text-xs text-slate-400 truncate">
+            <p className="text-xs truncate" style={{ color: '#93C5FD', opacity: 0.7 }}>
               {user?.role ? ROLE_LABELS[user.role] : ''}
             </p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-ct-300 opacity-75 hover:opacity-100 hover:text-white transition-all"
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.06)'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = ''; }}
         >
           <LogOut className="w-5 h-5 shrink-0" />
           Sign Out

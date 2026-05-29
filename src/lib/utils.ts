@@ -7,36 +7,38 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Civic Trust status color map — using exact design-system hex values via inline style
+// or Tailwind arbitrary classes where needed.
 export const TICKET_STATUS_COLORS: Record<TicketStatus, string> = {
-  [TicketStatus.CREATED]: 'bg-gray-100 text-gray-700',
-  [TicketStatus.WAITING]: 'bg-blue-100 text-blue-700',
-  [TicketStatus.CALLED]: 'bg-amber-100 text-amber-700',
-  [TicketStatus.IN_SERVICE]: 'bg-green-100 text-green-700',
-  [TicketStatus.ON_HOLD]: 'bg-orange-100 text-orange-700',
-  [TicketStatus.TRANSFERRED]: 'bg-purple-100 text-purple-700',
+  [TicketStatus.CREATED]:          'bg-ct-100 text-ct-700',
+  [TicketStatus.WAITING]:          'bg-ct-100 text-ct-700',
+  [TicketStatus.CALLED]:           'bg-amber-100 text-amber-700',
+  [TicketStatus.IN_SERVICE]:       'bg-emerald-100 text-emerald-700',
+  [TicketStatus.ON_HOLD]:          'bg-orange-100 text-orange-700',
+  [TicketStatus.TRANSFERRED]:      'bg-purple-100 text-purple-700',
   [TicketStatus.AWAITING_PAYMENT]: 'bg-yellow-100 text-yellow-700',
-  [TicketStatus.AWAITING_DOCUMENT]: 'bg-cyan-100 text-cyan-700',
-  [TicketStatus.COMPLETED]: 'bg-emerald-100 text-emerald-700',
-  [TicketStatus.REJECTED]: 'bg-rose-100 text-rose-700',
-  [TicketStatus.NO_SHOW]: 'bg-red-100 text-red-700',
-  [TicketStatus.CANCELLED]: 'bg-slate-100 text-slate-500',
-  [TicketStatus.EXPIRED]: 'bg-slate-100 text-slate-400',
-  [TicketStatus.ABANDONED]: 'bg-slate-100 text-slate-300',
+  [TicketStatus.AWAITING_DOCUMENT]:'bg-cyan-100 text-cyan-700',
+  [TicketStatus.COMPLETED]:        'bg-emerald-100 text-emerald-700',
+  [TicketStatus.REJECTED]:         'bg-red-100 text-red-700',
+  [TicketStatus.NO_SHOW]:          'bg-red-100 text-red-700',
+  [TicketStatus.CANCELLED]:        'bg-slate-100 text-slate-500',
+  [TicketStatus.EXPIRED]:          'bg-slate-100 text-slate-400',
+  [TicketStatus.ABANDONED]:        'bg-slate-100 text-slate-400',
 };
 
 export const QUEUE_STATUS_COLORS: Record<QueueStatus, string> = {
-  [QueueStatus.OPEN]: 'bg-green-100 text-green-700',
+  [QueueStatus.OPEN]:   'bg-emerald-100 text-emerald-700',
   [QueueStatus.CLOSED]: 'bg-red-100 text-red-700',
   [QueueStatus.PAUSED]: 'bg-amber-100 text-amber-700',
 };
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  [UserRole.SUPER_ADMIN]: 'Super Admin',
-  [UserRole.ORG_ADMIN]: 'Org Admin',
+  [UserRole.SUPER_ADMIN]:    'Super Admin',
+  [UserRole.ORG_ADMIN]:      'Org Admin',
   [UserRole.BRANCH_MANAGER]: 'Branch Manager',
-  [UserRole.SUPERVISOR]: 'Supervisor',
-  [UserRole.OFFICER]: 'Officer',
-  [UserRole.CUSTOMER]: 'Customer',
+  [UserRole.SUPERVISOR]:     'Supervisor',
+  [UserRole.OFFICER]:        'Officer',
+  [UserRole.CUSTOMER]:       'Customer',
 };
 
 export { TICKET_STATUS_LABELS };

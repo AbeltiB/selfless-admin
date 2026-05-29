@@ -43,18 +43,18 @@ export function TopBar({ user }: TopBarProps) {
       <h2 className="text-xl font-semibold text-slate-800 flex-1">{title}</h2>
 
       {/* Clock */}
-      <div className="flex items-center gap-2 text-sm text-slate-500 font-mono bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+      <div className="flex items-center gap-2 text-sm text-slate-500 font-mono bg-ct-50 px-3 py-1.5 rounded-lg border border-ct-200">
         <span>{time}</span>
       </div>
 
       {/* Notifications placeholder */}
-      <button className="relative p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors">
+      <button className="relative p-2 rounded-lg hover:bg-ct-50 text-slate-400 hover:text-ct-600 transition-colors">
         <Bell className="w-5 h-5" />
       </button>
 
       {/* User info */}
       <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
-        <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+        <div className="w-9 h-9 bg-ct-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
           {user?.email?.charAt(0)?.toUpperCase() ?? 'U'}
         </div>
         <div className="hidden sm:block">

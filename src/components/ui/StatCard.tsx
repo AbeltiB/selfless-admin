@@ -11,21 +11,14 @@ interface StatCardProps {
 }
 
 const colors = {
-  blue: { bg: 'bg-blue-50', icon: 'text-blue-600', ring: 'bg-blue-100' },
-  green: { bg: 'bg-green-50', icon: 'text-green-600', ring: 'bg-green-100' },
-  amber: { bg: 'bg-amber-50', icon: 'text-amber-600', ring: 'bg-amber-100' },
-  red: { bg: 'bg-red-50', icon: 'text-red-600', ring: 'bg-red-100' },
-  purple: { bg: 'bg-purple-50', icon: 'text-purple-600', ring: 'bg-purple-100' },
+  blue:   { ring: 'bg-ct-100',    icon: 'text-ct-600'                              },
+  green:  { ring: 'bg-emerald-100', icon: 'text-emerald-600'                       },
+  amber:  { ring: 'bg-amber-100',  icon: 'text-amber-600'                          },
+  red:    { ring: 'bg-red-100',    icon: 'text-red-600'                             },
+  purple: { ring: 'bg-purple-100', icon: 'text-purple-600'                         },
 };
 
-export function StatCard({
-  title,
-  value,
-  subtitle,
-  icon: Icon,
-  color = 'blue',
-  trend,
-}: StatCardProps) {
+export function StatCard({ title, value, subtitle, icon: Icon, color = 'blue', trend }: StatCardProps) {
   const c = colors[color];
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
@@ -35,7 +28,7 @@ export function StatCard({
           <p className="text-3xl font-bold text-slate-800 mt-1">{value}</p>
           {subtitle && <p className="text-sm text-slate-500 mt-1">{subtitle}</p>}
           {trend && (
-            <p className={cn('text-xs mt-1', trend.value >= 0 ? 'text-green-600' : 'text-red-600')}>
+            <p className={cn('text-xs mt-1', trend.value >= 0 ? 'text-status-success-text' : 'text-status-danger-text')}>
               {trend.value >= 0 ? '↑' : '↓'} {Math.abs(trend.value)}% {trend.label}
             </p>
           )}
