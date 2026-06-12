@@ -16,13 +16,21 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-ct-950/60 backdrop-blur-sm" onClick={onClose} />
-      <div className={cn('relative bg-white rounded-2xl shadow-xl w-full border border-slate-200', sizes[size])}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-          <h3 className="text-base font-semibold text-slate-800">{title}</h3>
+      <div
+        className="fixed inset-0 bg-ct-950/30 backdrop-blur-[2px] animate-fade-in"
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          'relative bg-white rounded-2xl shadow-xl shadow-ct-950/10 w-full border border-ct-200 animate-modal-in',
+          sizes[size],
+        )}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-ct-100">
+          <h3 className="text-[15px] font-semibold text-ct-900 tracking-tight">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-ct-50 text-slate-400 hover:text-ct-600 transition-colors"
+            className="p-1.5 rounded-lg text-ct-400 hover:text-ct-900 hover:bg-ct-100 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>

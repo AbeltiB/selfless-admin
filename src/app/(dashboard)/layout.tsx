@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar userRole={user?.role} />
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <TopBar user={user} />
-        <main className="flex-1 overflow-y-auto p-6 bg-slate-100">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6 bg-ct-50">{children}</main>
       </div>
     </div>
   );

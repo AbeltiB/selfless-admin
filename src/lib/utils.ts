@@ -7,29 +7,29 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Civic Trust status color map — using exact design-system hex values via inline style
-// or Tailwind arbitrary classes where needed.
+// Status colors are semantic and theme-independent: soft tinted bg +
+// strong text + matching border, consistent with the Badge component.
 export const TICKET_STATUS_COLORS: Record<TicketStatus, string> = {
-  [TicketStatus.CREATED]:          'bg-ct-100 text-ct-700',
-  [TicketStatus.WAITING]:          'bg-ct-100 text-ct-700',
-  [TicketStatus.CALLED]:           'bg-amber-100 text-amber-700',
-  [TicketStatus.IN_SERVICE]:       'bg-emerald-100 text-emerald-700',
-  [TicketStatus.ON_HOLD]:          'bg-orange-100 text-orange-700',
-  [TicketStatus.TRANSFERRED]:      'bg-purple-100 text-purple-700',
-  [TicketStatus.AWAITING_PAYMENT]: 'bg-yellow-100 text-yellow-700',
-  [TicketStatus.AWAITING_DOCUMENT]:'bg-cyan-100 text-cyan-700',
-  [TicketStatus.COMPLETED]:        'bg-emerald-100 text-emerald-700',
-  [TicketStatus.REJECTED]:         'bg-red-100 text-red-700',
-  [TicketStatus.NO_SHOW]:          'bg-red-100 text-red-700',
-  [TicketStatus.CANCELLED]:        'bg-slate-100 text-slate-500',
-  [TicketStatus.EXPIRED]:          'bg-slate-100 text-slate-400',
-  [TicketStatus.ABANDONED]:        'bg-slate-100 text-slate-400',
+  [TicketStatus.CREATED]:          'bg-blue-50 text-blue-700 border border-blue-200',
+  [TicketStatus.WAITING]:          'bg-blue-50 text-blue-700 border border-blue-200',
+  [TicketStatus.CALLED]:           'bg-amber-50 text-amber-700 border border-amber-200',
+  [TicketStatus.IN_SERVICE]:       'bg-emerald-50 text-emerald-700 border border-emerald-200',
+  [TicketStatus.ON_HOLD]:          'bg-orange-50 text-orange-700 border border-orange-200',
+  [TicketStatus.TRANSFERRED]:      'bg-violet-50 text-violet-700 border border-violet-200',
+  [TicketStatus.AWAITING_PAYMENT]: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+  [TicketStatus.AWAITING_DOCUMENT]:'bg-cyan-50 text-cyan-700 border border-cyan-200',
+  [TicketStatus.COMPLETED]:        'bg-emerald-50 text-emerald-700 border border-emerald-200',
+  [TicketStatus.REJECTED]:         'bg-red-50 text-red-700 border border-red-200',
+  [TicketStatus.NO_SHOW]:          'bg-red-50 text-red-700 border border-red-200',
+  [TicketStatus.CANCELLED]:        'bg-ct-100 text-ct-500 border border-ct-200',
+  [TicketStatus.EXPIRED]:          'bg-ct-100 text-ct-400 border border-ct-200',
+  [TicketStatus.ABANDONED]:        'bg-ct-100 text-ct-400 border border-ct-200',
 };
 
 export const QUEUE_STATUS_COLORS: Record<QueueStatus, string> = {
-  [QueueStatus.OPEN]:   'bg-emerald-100 text-emerald-700',
-  [QueueStatus.CLOSED]: 'bg-red-100 text-red-700',
-  [QueueStatus.PAUSED]: 'bg-amber-100 text-amber-700',
+  [QueueStatus.OPEN]:   'bg-emerald-50 text-emerald-700 border border-emerald-200',
+  [QueueStatus.CLOSED]: 'bg-red-50 text-red-700 border border-red-200',
+  [QueueStatus.PAUSED]: 'bg-amber-50 text-amber-700 border border-amber-200',
 };
 
 export const ROLE_LABELS: Record<UserRole, string> = {

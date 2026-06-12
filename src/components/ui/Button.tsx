@@ -8,17 +8,22 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary:   'bg-ct-600 hover:bg-ct-700 text-white disabled:bg-ct-400 shadow-sm hover:-translate-y-px hover:shadow-md',
-  secondary: 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 hover:border-ct-400',
-  danger:    'bg-status-danger hover:bg-red-700 text-white disabled:opacity-50',
-  ghost:     'bg-transparent hover:bg-ct-100 text-ct-600 border border-transparent',
-  success:   'bg-status-success hover:bg-emerald-600 text-white disabled:opacity-50',
+  primary:
+    'bg-ct-900 hover:bg-ct-700 text-white shadow-sm disabled:bg-ct-300 disabled:text-ct-500',
+  secondary:
+    'bg-white hover:bg-ct-50 text-ct-900 border border-ct-300 shadow-sm disabled:text-ct-400',
+  danger:
+    'bg-status-danger hover:bg-red-600 text-white shadow-sm disabled:opacity-50',
+  ghost:
+    'bg-transparent hover:bg-ct-100 text-ct-500 hover:text-ct-900 disabled:text-ct-300',
+  success:
+    'bg-status-success hover:bg-emerald-600 text-white shadow-sm disabled:opacity-50',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  sm: 'h-8 px-3 text-[13px]',
+  md: 'h-9 px-4 text-sm',
+  lg: 'h-11 px-6 text-[15px]',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -26,7 +31,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-ct-500/25 focus:ring-offset-2 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-colors select-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ct-400 focus-visible:ring-offset-2',
+        'active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100',
         variants[variant],
         sizes[size],
         className,
@@ -35,7 +42,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       {...props}
     >
       {loading && (
-        <span className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />
+        <span className="w-3.5 h-3.5 border-2 border-current/25 border-t-current rounded-full animate-spin" />
       )}
       {children}
     </button>

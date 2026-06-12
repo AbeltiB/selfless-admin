@@ -2,7 +2,7 @@
 import { QueueStatus } from 'selfless-sdk';
 import type { Queue } from 'selfless-sdk';
 import { cn, QUEUE_STATUS_COLORS, formatWait } from '@/lib/utils';
-import { Users, CheckCircle, Clock, PlayCircle } from 'lucide-react';
+import { Users, Clock, PlayCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useQueueStore } from '@/store/queue.store';
 
@@ -26,20 +26,24 @@ export function QueueCard({ queue, onCallNext, onSelect, selected }: QueueCardPr
     <div
       onClick={() => onSelect?.(queue)}
       className={cn(
-        'bg-white rounded-xl border-2 p-5 cursor-pointer transition-all hover:shadow-md',
-        selected ? 'border-ct-600 shadow-md' : 'border-slate-200',
+        'bg-white rounded-xl border p-5 cursor-pointer transition-all',
+        selected
+          ? 'border-ct-900 ring-1 ring-ct-900'
+          : 'border-ct-200 hover:border-ct-300 hover:shadow-sm',
       )}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <h3 className="font-semibold text-slate-800 text-sm">
+      <div className="flex items-start justify-between mb-4">
+        <div className="min-w-0">
+          <h3 className="font-semibold text-ct-900 text-sm truncate tracking-tight">
             {q.service?.name ?? 'Queue'}
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">{queue.prefix} series</p>
+          <p className="text-xs text-ct-400 mt-0.5">
+            {queue.prefix} series · now #{queue.currentNumber}
+          </p>
         </div>
         <span
           className={cn(
-            'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
+            'inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium shrink-0',
             QUEUE_STATUS_COLORS[status],
           )}
         >
@@ -47,47 +51,41 @@ export function QueueCard({ queue, onCallNext, onSelect, selected }: QueueCardPr
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-blue-600 mb-1">
-            <Users className="w-4 h-4" />
-          </div>
-          <p className="text-2xl font-bold text-slate-800">{waitingCount}</p>
-          <p className="text-xs text-slate-500">Waiting</p>
+      <div className="grid grid-cols-3 divide-x divide-ct-100 rounded-lg bg-ct-50 py-3 mb-4">
+        <div className="text-center px-2">
+          <p className="text-xl font-semibold text-ct-900 tnum leading-none">{waitingCount}</p>
+          <p className="text-[11px] text-ct-400 mt-1.5 flex items-center justify-center gap-1">
+            <Users className="w-3 h-3" /> Waiting
+          </p>
         </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-green-600 mb-1">
-            <PlayCircle className="w-4 h-4" />
-          </div>
-          <p className="text-2xl font-bold text-slate-800">{servingCount}</p>
-          <p className="text-xs text-slate-500">Serving</p>
+        <div className="text-center px-2">
+          <p className="text-xl font-semibold text-ct-900 tnum leading-none">{servingCount}</p>
+          <p className="text-[11px] text-ct-400 mt-1.5 flex items-center justify-center gap-1">
+            <PlayCircle className="w-3 h-3" /> Serving
+          </p>
         </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-amber-600 mb-1">
-            <Clock className="w-4 h-4" />
-          </div>
-          <p className="text-sm font-bold text-slate-800">{formatWait(avgWait)}</p>
-          <p className="text-xs text-slate-500">Avg Wait</p>
+        <div className="text-center px-2">
+          <p className="text-xl font-semibold text-ct-900 tnum leading-none">
+            {formatWait(avgWait)}
+          </p>
+          <p className="text-[11px] text-ct-400 mt-1.5 flex items-center justify-center gap-1">
+            <Clock className="w-3 h-3" /> Avg wait
+          </p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1 text-xs text-slate-500">
-          <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-          <span>Current #{queue.currentNumber}</span>
-        </div>
-        {status === QueueStatus.OPEN && onCallNext && (
-          <Button
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onCallNext(queue.id);
-            }}
-          >
-            Call Next
-          </Button>
-        )}
-      </div>
+      {status === QueueStatus.OPEN && onCallNext && (
+        <Button
+          size="sm"
+          className="w-full"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCallNext(queue.id);
+          }}
+        >
+          Call Next
+        </Button>
+      )}
     </div>
   );
 }

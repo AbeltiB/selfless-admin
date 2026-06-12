@@ -1,52 +1,80 @@
 @import "tailwindcss";
 
-/* ── Civic Trust design tokens ─────────────────────────────────────────── */
+/* ── Ink design system ───────────────────────────────────────────────────
+   Modern minimal: near-black primary, neutral zinc surfaces, hairline
+   borders. Color is reserved for status semantics (success/warn/danger).
+   The ct-* ramp is the app-wide primary scale — remapping it re-skins
+   every page that references it. */
 @theme {
-  /* Primary navy/blue ramp */
-  --color-ct-950: #0A1628;
-  --color-ct-900: #1A2B4A;
-  --color-ct-800: #1E3A5F;
-  --color-ct-700: #1D4ED8;
-  --color-ct-600: #2563EB;
-  --color-ct-500: #3B82F6;
-  --color-ct-400: #60A5FA;
-  --color-ct-300: #93C5FD;
-  --color-ct-200: #BFDBFE;
-  --color-ct-100: #DBEAFE;
-  --color-ct-50:  #EFF6FF;
+  /* Primary "ink" ramp (zinc-based) */
+  --color-ct-950: #09090B;
+  --color-ct-900: #18181B;
+  --color-ct-800: #27272A;
+  --color-ct-700: #3F3F46;
+  --color-ct-600: #18181B;
+  --color-ct-500: #71717A;
+  --color-ct-400: #A1A1AA;
+  --color-ct-300: #D4D4D8;
+  --color-ct-200: #E4E4E7;
+  --color-ct-100: #F4F4F5;
+  --color-ct-50:  #FAFAFA;
 
-  /* Status */
+  /* Status — vivid, semantic */
   --color-status-success:      #10B981;
-  --color-status-success-bg:   #D1FAE5;
-  --color-status-success-text: #065F46;
+  --color-status-success-bg:   #ECFDF5;
+  --color-status-success-text: #047857;
   --color-status-warning:      #F59E0B;
-  --color-status-warning-bg:   #FEF3C7;
-  --color-status-warning-text: #92400E;
+  --color-status-warning-bg:   #FFFBEB;
+  --color-status-warning-text: #B45309;
   --color-status-danger:       #EF4444;
-  --color-status-danger-bg:    #FEE2E2;
-  --color-status-danger-text:  #991B1B;
+  --color-status-danger-bg:    #FEF2F2;
+  --color-status-danger-text:  #B91C1C;
 
   /* Fonts */
-  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
-  --font-mono: var(--font-dm-mono), 'DM Mono', 'Fira Code', monospace;
-}
-
-/* ── Semantic aliases (for raw CSS use) ────────────────────────────────── */
-:root {
-  --color-sidebar-bg:    #1A2B4A;
-  --color-sidebar-width: 260px;
+  --font-sans: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SF Mono', 'Fira Code', monospace;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-body {
-  font-family: var(--font-sans);
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+  background-color: #FAFAFA;
+  color: #18181B;
+}
+
+/* Tabular numbers for stats, clocks, queue numbers */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Modal entrance ─────────────────────────────────────────────────────── */
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-modal-in { animation: modal-in 0.18s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-fade-in  { animation: fade-in 0.15s ease-out; }
+
 /* ── Scrollbar ──────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #BFDBFE; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #93C5FD; }
+::-webkit-scrollbar-thumb {
+  background: #D4D4D8;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #A1A1AA; background-clip: content-box; border: 2px solid transparent; }

@@ -11,32 +11,40 @@ interface StatCardProps {
 }
 
 const colors = {
-  blue:   { ring: 'bg-ct-100',    icon: 'text-ct-600'                              },
-  green:  { ring: 'bg-emerald-100', icon: 'text-emerald-600'                       },
-  amber:  { ring: 'bg-amber-100',  icon: 'text-amber-600'                          },
-  red:    { ring: 'bg-red-100',    icon: 'text-red-600'                             },
-  purple: { ring: 'bg-purple-100', icon: 'text-purple-600'                         },
+  blue:   'bg-blue-50 text-blue-600',
+  green:  'bg-emerald-50 text-emerald-600',
+  amber:  'bg-amber-50 text-amber-600',
+  red:    'bg-red-50 text-red-600',
+  purple: 'bg-violet-50 text-violet-600',
 };
 
 export function StatCard({ title, value, subtitle, icon: Icon, color = 'blue', trend }: StatCardProps) {
-  const c = colors[color];
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-slate-500">{title}</p>
-          <p className="text-3xl font-bold text-slate-800 mt-1">{value}</p>
-          {subtitle && <p className="text-sm text-slate-500 mt-1">{subtitle}</p>}
-          {trend && (
-            <p className={cn('text-xs mt-1', trend.value >= 0 ? 'text-status-success-text' : 'text-status-danger-text')}>
-              {trend.value >= 0 ? '↑' : '↓'} {Math.abs(trend.value)}% {trend.label}
-            </p>
-          )}
-        </div>
-        <div className={cn('p-3 rounded-xl', c.ring)}>
-          <Icon className={cn('w-7 h-7', c.icon)} />
+    <div className="bg-white rounded-xl border border-ct-200 p-5">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[13px] font-medium text-ct-500">{title}</p>
+        <div className={cn('p-1.5 rounded-lg', colors[color])}>
+          <Icon className="w-4 h-4" />
         </div>
       </div>
+      <p className="text-[28px] font-semibold text-ct-900 leading-none tracking-tight tnum">
+        {value}
+      </p>
+      {(subtitle || trend) && (
+        <div className="flex items-center gap-2 mt-2">
+          {trend && (
+            <span
+              className={cn(
+                'text-xs font-medium tnum',
+                trend.value >= 0 ? 'text-status-success-text' : 'text-status-danger-text',
+              )}
+            >
+              {trend.value >= 0 ? '↑' : '↓'} {Math.abs(trend.value)}% {trend.label}
+            </span>
+          )}
+          {subtitle && <span className="text-xs text-ct-400">{subtitle}</span>}
+        </div>
+      )}
     </div>
   );
 }

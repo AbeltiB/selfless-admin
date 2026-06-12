@@ -25,17 +25,38 @@ interface NavItem {
   roles?: UserRole[];
 }
 
-const navItems: NavItem[] = [
-  { label: 'Dashboard',     href: '/dashboard',     icon: LayoutDashboard },
-  { label: 'Queues',        href: '/queues',         icon: Ticket },
-  { label: 'Appointments',  href: '/appointments',   icon: CalendarClock },
-  { label: 'Counters',      href: '/counters',       icon: Monitor },
-  { label: 'Workflows',     href: '/workflows',      icon: GitBranch,  roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
-  { label: 'Services',      href: '/services',       icon: ListTodo },
-  { label: 'Branches',      href: '/branches',       icon: Building2,  roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
-  { label: 'Organizations', href: '/organizations',  icon: Building,   roles: [UserRole.SUPER_ADMIN] },
-  { label: 'Users',         href: '/users',          icon: Users,      roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER] },
-  { label: 'Analytics',     href: '/analytics',      icon: BarChart2 },
+interface NavSection {
+  title?: string;
+  items: NavItem[];
+}
+
+const MANAGERS = [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.BRANCH_MANAGER];
+
+const navSections: NavSection[] = [
+  {
+    items: [
+      { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      { label: 'Analytics', href: '/analytics', icon: BarChart2 },
+    ],
+  },
+  {
+    title: 'Operations',
+    items: [
+      { label: 'Queues',       href: '/queues',       icon: Ticket },
+      { label: 'Appointments', href: '/appointments', icon: CalendarClock },
+      { label: 'Counters',     href: '/counters',     icon: Monitor },
+    ],
+  },
+  {
+    title: 'Configuration',
+    items: [
+      { label: 'Services',      href: '/services',      icon: ListTodo },
+      { label: 'Workflows',     href: '/workflows',     icon: GitBranch, roles: MANAGERS },
+      { label: 'Branches',      href: '/branches',      icon: Building2, roles: MANAGERS },
+      { label: 'Organizations', href: '/organizations', icon: Building,  roles: [UserRole.SUPER_ADMIN] },
+      { label: 'Users',         href: '/users',         icon: Users,     roles: MANAGERS },
+    ],
+  },
 ];
 
 interface SidebarProps {
@@ -46,79 +67,95 @@ export function Sidebar({ userRole }: SidebarProps) {
   const pathname = usePathname();
   const { logout, user } = useAuth();
 
-  const filteredItems = navItems.filter(
-    (item) => !item.roles || (userRole && item.roles.includes(userRole)),
-  );
+  const visibleSections = navSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(
+        (item) => !item.roles || (userRole && item.roles.includes(userRole)),
+      ),
+    }))
+    .filter((section) => section.items.length > 0);
 
   return (
-    <aside
-      className="flex flex-col h-full text-white"
-      style={{ width: '260px', minWidth: '260px', backgroundColor: '#1A2B4A' }}
-    >
+    <aside className="flex flex-col h-full w-[248px] min-w-[248px] bg-white border-r border-ct-200">
       {/* Logo */}
-      <div className="px-6 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-ct-600 rounded-lg flex items-center justify-center font-bold text-lg text-white">
+      <div className="px-5 pt-5 pb-4">
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-ct-900 rounded-lg flex items-center justify-center text-white text-sm font-bold tracking-tight">
             S
           </div>
           <div>
-            <h1 className="font-semibold text-white text-base leading-none">SelfLess</h1>
-            <p className="text-xs mt-0.5" style={{ color: '#93C5FD', opacity: 0.7 }}>Admin Portal</p>
+            <h1 className="text-[15px] font-semibold text-ct-900 leading-none tracking-tight">
+              SelfLess
+            </h1>
+            <p className="text-[11px] text-ct-400 mt-0.5 leading-none">Admin</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {filteredItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
-                isActive
-                  ? 'bg-ct-600 text-white'
-                  : 'text-ct-300 opacity-75 hover:opacity-100 hover:text-white',
-              )}
-              style={!isActive ? { ':hover': { backgroundColor: 'rgba(255,255,255,0.06)' } } as React.CSSProperties : undefined}
-              onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.06)'; }}
-              onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.backgroundColor = ''; }}
-            >
-              <Icon className="w-5 h-5 shrink-0" />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 px-3 pb-4 overflow-y-auto">
+        {visibleSections.map((section, i) => (
+          <div key={i} className={cn(i > 0 && 'mt-5')}>
+            {section.title && (
+              <p className="px-2.5 mb-1.5 text-[11px] font-medium text-ct-400 uppercase tracking-wider">
+                {section.title}
+              </p>
+            )}
+            <div className="space-y-px">
+              {section.items.map((item) => {
+                const isActive =
+                  pathname === item.href || pathname.startsWith(item.href + '/');
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-colors',
+                      isActive
+                        ? 'bg-ct-100 text-ct-900'
+                        : 'text-ct-500 hover:text-ct-900 hover:bg-ct-50',
+                    )}
+                  >
+                    <Icon
+                      className={cn(
+                        'w-[18px] h-[18px] shrink-0',
+                        isActive ? 'text-ct-900' : 'text-ct-400',
+                      )}
+                      strokeWidth={isActive ? 2.25 : 2}
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
-      {/* User info + logout */}
-      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-3 px-3 py-2 mb-1">
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
-            style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-          >
+      {/* User footer */}
+      <div className="px-3 py-3 border-t border-ct-200">
+        <div className="flex items-center gap-2.5 px-2.5 py-1.5">
+          <div className="w-7 h-7 rounded-full bg-ct-900 flex items-center justify-center text-[11px] font-semibold text-white shrink-0">
             {user?.email?.charAt(0)?.toUpperCase() ?? 'U'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{user?.email ?? 'User'}</p>
-            <p className="text-xs truncate" style={{ color: '#93C5FD', opacity: 0.7 }}>
+            <p className="text-[13px] font-medium text-ct-900 truncate leading-tight">
+              {user?.email ?? 'User'}
+            </p>
+            <p className="text-[11px] text-ct-400 truncate leading-tight">
               {user?.role ? ROLE_LABELS[user.role] : ''}
             </p>
           </div>
+          <button
+            onClick={logout}
+            title="Sign out"
+            className="p-1.5 rounded-md text-ct-400 hover:text-ct-900 hover:bg-ct-100 transition-colors shrink-0"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
-        <button
-          onClick={logout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-ct-300 opacity-75 hover:opacity-100 hover:text-white transition-all"
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.06)'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = ''; }}
-        >
-          <LogOut className="w-5 h-5 shrink-0" />
-          Sign Out
-        </button>
       </div>
     </aside>
   );

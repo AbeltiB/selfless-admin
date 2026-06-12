@@ -32,7 +32,7 @@ export default function LoginPage() {
     setError('');
     try {
       const res = await api.post('/auth/telegram', data);
-      const { accountType, accessToken, user, customer } = res.data.data;
+      const { accountType, accessToken, user } = res.data.data;
 
       if (accountType === 'staff') {
         authStorage.setToken(accessToken);
@@ -54,7 +54,6 @@ export default function LoginPage() {
   useEffect(() => {
     if (!BOT_USERNAME || !tgContainerRef.current) return;
 
-    // Expose callback before injecting widget script
     window.onTelegramAuth = handleTelegramAuth;
 
     const script = document.createElement('script');
@@ -87,92 +86,66 @@ export default function LoginPage() {
       toast.success('Welcome back!');
       router.push('/dashboard');
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { data?: { message?: string; error?: { message?: string } } } };
-      setError(axiosErr.response?.data?.message || axiosErr.response?.data?.error?.message || 'Login failed — check API is running');
+      const axiosErr = err as {
+        response?: { data?: { message?: string; error?: { message?: string } } };
+      };
+      setError(
+        axiosErr.response?.data?.message ||
+          axiosErr.response?.data?.error?.message ||
+          'Could not reach the server. Please try again in a moment.',
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-ct-950 to-ct-900 p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-ct-50 p-4">
+      <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-ct-600 rounded-2xl mb-4 shadow-lg shadow-ct-950/40">
-            <span className="text-white text-2xl font-bold">S</span>
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-11 h-11 bg-ct-900 rounded-xl flex items-center justify-center text-white text-lg font-bold mb-4 shadow-sm">
+            S
           </div>
-          <h1 className="text-4xl font-bold text-white tracking-tight">SelfLess</h1>
-          <p className="text-slate-400 mt-2 text-sm">Service Orchestration Platform</p>
+          <h1 className="text-xl font-semibold text-ct-900 tracking-tight">Sign in to SelfLess</h1>
+          <p className="text-[13px] text-ct-400 mt-1">Service orchestration platform</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <h2 className="text-2xl font-semibold text-slate-800 mb-1">Sign in</h2>
-          <p className="text-sm text-slate-500 mb-6">Access the admin portal</p>
-
+        <div className="bg-white rounded-2xl border border-ct-200 shadow-sm p-6">
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
-              <span className="mt-0.5">⚠</span>
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Telegram Login Widget */}
-          {BOT_USERNAME ? (
-            <>
-              <div className="flex justify-center mb-4">
-                {tgLoading ? (
-                  <div className="flex items-center gap-2 py-2.5 px-5 bg-[#54a9eb] text-white rounded-lg text-sm font-medium">
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Signing in with Telegram...
-                  </div>
-                ) : (
-                  <div ref={tgContainerRef} />
-                )}
-              </div>
-
-              <div className="flex items-center gap-3 mb-4">
-                <hr className="flex-1 border-slate-200" />
-                <span className="text-xs text-slate-400">or sign in with email</span>
-                <hr className="flex-1 border-slate-200" />
-              </div>
-            </>
-          ) : (
-            <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-xs">
-              Telegram login not configured. Set <code>NEXT_PUBLIC_TELEGRAM_BOT_USERNAME</code> to enable it.
+            <div className="mb-4 px-3 py-2.5 rounded-lg bg-status-danger-bg border border-red-200 text-status-danger-text text-[13px]">
+              {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Email address
-              </label>
+              <label className="block text-[13px] font-medium text-ct-700 mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="admin@selfless.io"
+                className="w-full h-10 px-3 border border-ct-300 rounded-lg text-sm text-ct-900 placeholder-ct-400 focus:outline-none focus:ring-2 focus:ring-ct-900/10 focus:border-ct-400 transition-shadow"
+                placeholder="you@company.com"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <label className="block text-[13px] font-medium text-ct-700 mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2.5 pr-10 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="w-full h-10 px-3 pr-10 border border-ct-300 rounded-lg text-sm text-ct-900 focus:outline-none focus:ring-2 focus:ring-ct-900/10 focus:border-ct-400 transition-shadow"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-ct-400 hover:text-ct-700 transition-colors"
                   tabIndex={-1}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
@@ -183,28 +156,43 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-ct-600 hover:bg-ct-700 disabled:bg-ct-400 text-white font-semibold rounded-lg transition-all hover:-translate-y-px hover:shadow-md flex items-center justify-center gap-2 mt-2"
+              className="w-full h-10 bg-ct-900 hover:bg-ct-700 disabled:bg-ct-300 disabled:text-ct-500 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 active:scale-[0.99]"
             >
               {loading ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
+                  Signing in…
                 </>
               ) : (
-                'Sign In'
+                'Sign in'
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-slate-100">
-            <p className="text-center text-xs text-slate-400">
-              Demo credentials: admin@selfless.io / Admin@123
-            </p>
-          </div>
+          {/* Telegram */}
+          {BOT_USERNAME && (
+            <>
+              <div className="flex items-center gap-3 my-5">
+                <hr className="flex-1 border-ct-200" />
+                <span className="text-[11px] text-ct-400 uppercase tracking-wider">or</span>
+                <hr className="flex-1 border-ct-200" />
+              </div>
+              <div className="flex justify-center">
+                {tgLoading ? (
+                  <div className="flex items-center gap-2 h-10 px-5 bg-[#54a9eb] text-white rounded-lg text-sm font-medium">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in with Telegram…
+                  </div>
+                ) : (
+                  <div ref={tgContainerRef} />
+                )}
+              </div>
+            </>
+          )}
         </div>
 
-        <p className="text-center text-slate-500 text-xs mt-6">
-          &copy; {new Date().getFullYear()} SelfLess Platform. All rights reserved.
+        <p className="text-center text-ct-400 text-xs mt-6">
+          Demo: admin@selfless.io / Admin@123
         </p>
       </div>
     </div>
