@@ -13,7 +13,8 @@ import { PageSpinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { formatDate } from '@/lib/utils';
 import type { Service } from 'selfless-sdk';
-import { ListTodo, Plus, Edit2, ToggleLeft, ToggleRight } from 'lucide-react';
+import Link from 'next/link';
+import { ListTodo, Plus, Edit2, ToggleLeft, ToggleRight, FileText, ClipboardList } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface ServiceForm {
@@ -204,6 +205,16 @@ export default function ServicesPage() {
                       <Button size="sm" variant="ghost" onClick={() => openEdit(service)}>
                         <Edit2 className="w-4 h-4" />
                       </Button>
+                      <Link href={`/services/${service.id}/requirements`}>
+                        <Button size="sm" variant="ghost" title="Requirements">
+                          <ClipboardList className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                      <Link href={`/services/${service.id}/forms`}>
+                        <Button size="sm" variant="ghost" title="Forms">
+                          <FileText className="w-4 h-4" />
+                        </Button>
+                      </Link>
                       <Button
                         size="sm"
                         variant="ghost"

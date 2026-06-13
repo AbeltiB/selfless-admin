@@ -13,6 +13,8 @@ import {
   Monitor,
   CalendarClock,
   LogOut,
+  Tv2,
+  Bell,
 } from 'lucide-react';
 import { cn, ROLE_LABELS } from '@/lib/utils';
 import { UserRole } from 'selfless-sdk';
@@ -42,9 +44,11 @@ const navSections: NavSection[] = [
   {
     title: 'Operations',
     items: [
-      { label: 'Queues',       href: '/queues',       icon: Ticket },
-      { label: 'Appointments', href: '/appointments', icon: CalendarClock },
-      { label: 'Counters',     href: '/counters',     icon: Monitor },
+      { label: 'Queues',         href: '/queues',         icon: Ticket },
+      { label: 'Appointments',   href: '/appointments',   icon: CalendarClock },
+      { label: 'Counters',       href: '/counters',       icon: Monitor },
+      { label: 'Display Board',  href: '/display',        icon: Tv2 },
+      { label: 'Notifications',  href: '/notifications',  icon: Bell },
     ],
   },
   {

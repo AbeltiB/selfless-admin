@@ -4,6 +4,8 @@ import { useBranches } from '@/hooks/useBranches';
 import { useQueues, useQueueTickets, useCallNext, useUpdateTicketStatus } from '@/hooks/useQueues';
 import { QueueCard } from '@/components/queue/QueueCard';
 import { TicketRow } from '@/components/queue/TicketRow';
+import { TicketDrawer } from '@/components/queue/TicketDrawer';
+import { TransferModal } from '@/components/queue/TransferModal';
 import { CallNextButton } from '@/components/queue/CallNextButton';
 import { Select } from '@/components/ui/Select';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -13,11 +15,14 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { QUEUE_STATUS_COLORS, cn } from '@/lib/utils';
 import type { Queue } from 'selfless-sdk';
 import { QueueStatus, TicketStatus } from 'selfless-sdk';
-import { Ticket } from 'lucide-react';
+import { Ticket, Download } from 'lucide-react';
+import { api } from '@/lib/api';
 
 export default function QueuesPage() {
   const [selectedBranchId, setSelectedBranchId] = useState('');
   const [selectedQueue, setSelectedQueue] = useState<Queue | null>(null);
+  const [drawerTicketId, setDrawerTicketId] = useState<string | null>(null);
+  const [transferTicketId, setTransferTicketId] = useState<string | null>(null);
 
   const { data: branches = [], isLoading: branchesLoading } = useBranches();
   const { data: queues = [], isLoading: queuesLoading } = useQueues(selectedBranchId || undefined);
@@ -33,6 +38,19 @@ export default function QueuesPage() {
 
   const handleStatusChange = (ticketId: string, status: TicketStatus) => {
     updateStatusMutation.mutate({ ticketId, status });
+  };
+
+  const handleExportCsv = async () => {
+    const params: Record<string, string> = {};
+    if (selectedQueue?.branchId) params.branchId = selectedQueue.branchId;
+    if (selectedQueue?.serviceId) params.serviceId = selectedQueue.serviceId;
+    const res = await api.get('/tickets/export', { params, responseType: 'blob' });
+    const url = URL.createObjectURL(res.data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tickets-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const servingTicket = tickets.find((t) => t.status === TicketStatus.IN_SERVICE);
@@ -133,7 +151,9 @@ export default function QueuesPage() {
                   {(servingTicket ?? calledTicket)?.queueNumber}
                 </p>
                 <p className="text-xs text-green-600 mt-0.5">
-                  {'Walk-in customer'}
+                  {(servingTicket ?? calledTicket) && ((servingTicket ?? calledTicket) as any).customer
+                    ? `${((servingTicket ?? calledTicket) as any).customer.firstName} ${((servingTicket ?? calledTicket) as any).customer.lastName ?? ''}`.trim()
+                    : 'Walk-in customer'}
                 </p>
               </div>
             )}
@@ -161,11 +181,14 @@ export default function QueuesPage() {
           <Card className="lg:col-span-2 p-0 overflow-hidden">
             <CardHeader className="px-6 pt-5 pb-4 border-b border-slate-100">
               <CardTitle>Tickets</CardTitle>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <Badge variant="info">{waitingCount} waiting</Badge>
                 <Badge variant="success">
                   {tickets.filter((t) => t.status === TicketStatus.IN_SERVICE).length} serving
                 </Badge>
+                <Button size="sm" variant="ghost" onClick={handleExportCsv} title="Export CSV">
+                  <Download className="w-4 h-4" />
+                </Button>
               </div>
             </CardHeader>
             {ticketsLoading ? (
@@ -208,6 +231,7 @@ export default function QueuesPage() {
                         key={ticket.id}
                         ticket={ticket}
                         onStatusChange={handleStatusChange}
+                        onView={setDrawerTicketId}
                       />
                     ))}
                   </tbody>
@@ -223,6 +247,27 @@ export default function QueuesPage() {
           <p className="text-sm">Select a queue above to manage its tickets</p>
         </div>
       )}
+
+      {/* Ticket Detail Drawer */}
+      <TicketDrawer
+        ticketId={drawerTicketId}
+        onClose={() => setDrawerTicketId(null)}
+        onStatusChange={(ticketId, status) => {
+          handleStatusChange(ticketId, status);
+          setDrawerTicketId(null);
+        }}
+        onTransfer={(ticketId) => {
+          setDrawerTicketId(null);
+          setTransferTicketId(ticketId);
+        }}
+      />
+
+      {/* Transfer Modal */}
+      <TransferModal
+        ticketId={transferTicketId}
+        branchId={selectedQueue?.branchId}
+        onClose={() => setTransferTicketId(null)}
+      />
     </div>
   );
 }
